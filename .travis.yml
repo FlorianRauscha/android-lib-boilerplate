@@ -46,6 +46,7 @@ before_script:
     - emulator -avd test -no-skin -no-audio -no-window &
 
 script:
+    - chmod +x ./gradlew
     - android-wait-for-emulator
     - adb devices
     # Simulate hitting the menu button
