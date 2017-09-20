@@ -8,7 +8,7 @@ sudo: required
 
 env:
     matrix:
-        - ANDROID_TARGET=android-25 ANDROID_ABI=default/armeabi-v7a
+        - ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
     global:
         - ADB_INSTALL_TIMEOUT=10 # Default is 2 minutes, bump to 10
 
@@ -16,13 +16,15 @@ android:
     components:
         - tools
         - platform-tools
+        - android-22
         - android-26
         - build-tools-26.0.1
 
+        - extra
         - extra-android-m2repository
         - extra-google-m2repository
 
-        - sys-img-armeabi-v7a-android-25
+        - sys-img-armeabi-v7a-android-22
 
 # "avoid uploading the cache after every build"
 before_cache:
