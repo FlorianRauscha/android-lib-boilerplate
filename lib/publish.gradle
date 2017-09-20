@@ -1,0 +1,98 @@
+apply plugin: "com.jfrog.bintray"
+apply plugin: "maven-publish"
+
+publishing {
+    repositories {
+        // build repo for quick validation
+        maven {
+            name "buildLocal"
+            url "${buildDir}/repo"
+        }
+    }
+
+    publications {
+        "${rootProject.projectName}"(MavenPublication) {
+            artifactId rootProject.ext.artifactId
+            groupId rootProject.ext.group
+            version rootProject.ext.version
+
+            // Add the AAR artifact
+            artifact("${buildDir}/outputs/aar/jobdispatcher-release.aar") {
+                // wrap in a closure because this task isn't defined 'till
+                // the android plugin finishes
+                builtBy { tasks["bundleRelease"] }
+            }
+            // Add the sources and javadoc JARs
+            artifact sourcesJar
+            artifact javadocsJar
+
+            // Define the POM file programatically
+            pom.withXml {
+                def n = asNode()
+
+                n.appendNode("description", rootProject.ext.description)
+                n.appendNode("inceptionYear", rootProject.ext.inceptionYear)
+
+                def licensesNode = n.appendNode("licenses")
+                def licenseNode = licensesNode.appendNode("license")
+                licenseNode.appendNode("name", rootProject.ext.licenseName)
+                licenseNode.appendNode("url", rootProject.ext.licenseUrl)
+                licenseNode.appendNode("distribution", rootProject.ext.licenseDist)
+
+                def developersNode = n.appendNode("developers")
+                def devNode = developersNode.appendNode("developer")
+                devNode.appendNode("id", rootProject.ext.id)
+                devNode.appendNode("name", rootProject.ext.name)
+                devNode.appendNode("email", rootProject.ext.email)
+                devNode.appendNode("url", rootProject.ext.url)
+                devNode.appendNode("organization", rootProject.ext.organization)
+                devNode.appendNode("organizationUrl", rootProject.ext.organizationUrl)
+                def rolesNode = devNode.appendNode("roles")
+                rolesNode.appendNode("role", "architect")
+                rolesNode.appendNode("role", "developer")
+
+                def scmNode = n.appendNode("scm")
+                scmNode.appendNode("url", rootProject.ext.scmUrl)
+                scmNode.appendNode("connection", rootProject.ext.scmConnection)
+                scmNode.appendNode("developerConnection", rootProject.ext.scmDevConnection)
+
+                def depsNode = n.getAt("dependencies")[0]
+                if (depsNode == null) {
+                    depsNode = n.appendNode("dependencies")
+                }
+
+                def addDep = {
+                    def dependencyNode = depsNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('type', 'aar')
+                }
+
+                // add deps that everyone has
+                configurations.compile.allDependencies.each addDep
+                // add config specific deps
+                configurations["releaseCompile"].allDependencies.each addDep
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    bintray {
+        user = findProperty("BINTRAY_USER") ?: System.getenv("BINTRAY_USER")
+        key = findProperty("BINTRAY_KEY") ?: System.getenv("BINTRAY_KEY")
+
+        publications = ["${rootProject.projectName}"]
+
+        pkg {
+            userOrg = rootProject.ext.organization
+            repo = rootProject.ext.repo
+            name = rootProject.ext.name
+            vcsUrl = rootProject.ext.vcsUrl
+            licenses = ["Apache-2.0"]
+
+            version.name = rootProject.ext.version
+        }
+    }
+}

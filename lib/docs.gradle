@@ -1,0 +1,25 @@
+
+task javadocs(type: Javadoc) {
+    description "Generate Javadocs"
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+    failOnError false
+}
+
+task javadocsJar(type: Jar, dependsOn: javadocs) {
+    description "Package Javadocs into a jar"
+    classifier = "javadoc"
+    from javadocs.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    description "Package sources into a jar"
+    classifier = "sources"
+    from android.sourceSets.main.java.sourceFiles
+}
+
+task aar(dependsOn: "assembleRelease") {
+    group "artifact"
+    description "Builds the library AARs"
+}

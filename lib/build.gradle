@@ -1,0 +1,56 @@
+apply plugin: "com.android.library"
+
+android {
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName rootProject.ext.version
+        versionCode rootProject.ext.versionCode
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    defaultPublishConfig "release"
+    publishNonDefault true
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
+}
+
+dependencies {
+
+    // Library dependencies
+    compile "com.android.support:support-v4:${rootProject.ext.supportLibraryVersion}"
+
+    // Unit Test Dependencies
+    testCompile "junit:junit:${rootProject.ext.junit}"
+    testCompile "org.robolectric:robolectric:${rootProject.ext.robolectric}"
+    testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoCore}"
+
+    // Android (e2e) Test Dependencies
+    androidTestCompile "junit:junit:${rootProject.ext.junit}"
+    androidTestCompile "com.android.support.test:runner:${rootProject.ext.runnerVersion}"
+
+}
+
+// Add Javadoc Tasks
+apply from: "docs.gradle"
+
+// Add Coverage Tasks
+apply from: "coverage.gradle"
+
+// Add Publish Tasks
+apply from: "publish.gradle"
+
+
