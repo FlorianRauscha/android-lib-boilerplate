@@ -17,7 +17,7 @@ publishing {
             version rootProject.ext.version
 
             // Add the AAR artifact
-            artifact("${buildDir}/outputs/aar/jobdispatcher-release.aar") {
+            artifact("${buildDir}/outputs/aar/example-release.aar") {
                 // wrap in a closure because this task isn't defined 'till
                 // the android plugin finishes
                 builtBy { tasks["bundleRelease"] }

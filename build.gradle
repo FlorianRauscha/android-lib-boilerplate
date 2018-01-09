@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
     }
 }
@@ -19,18 +19,18 @@ ext {
     version = "0.0.1"
     versionCode = 1
     description = "Example Android Library Project"
-    inceptionYear = 2017
+    inceptionYear = 2018
 
     // Android Build
-    buildToolsVersion = "26.0.1"
-    compileSdkVersion = 26
-    targetSdkVersion = 26
+    buildToolsVersion = "27.0.2"
+    compileSdkVersion = 27
+    targetSdkVersion = 27
     minSdkVersion = 16
 
     // Dependency Versions
-    supportLibraryVersion = "26.1.0"
-    servicesLibraryVersion = "11.2.0"
-    firebaseLibraryVersion = "11.2.0"
+    supportLibraryVersion = "27.0.2"
+    servicesLibraryVersion = "11.8.0"
+    firebaseLibraryVersion = "11.8.0"
 
     // Test Dependencies
     junit = "4.12"
@@ -86,5 +86,5 @@ task wrapper(type: Wrapper) {
     // but requires Gradle 2.13+.
     //
     // See: https://github.com/jacoco/jacoco/pull/288
-    gradleVersion = '3.3'
+    gradleVersion = '4.1'
 }
